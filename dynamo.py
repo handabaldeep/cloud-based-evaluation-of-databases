@@ -85,17 +85,7 @@ class Dynamo:
         if self.table.table_size_bytes:
             return self.table.table_size_bytes
         else:
-            return 111
+            return 120
 
     def close(self):
         self._cleanup()
-
-
-if __name__ == "__main__":
-    dynamo = Dynamo(region="eu-west-2")
-    dynamo.create_table()
-    dynamo.insert("a", "2011-01-01", 111.22, 111.4444, 111.1, 111.333, 1234509876)
-    print(dynamo.read("a", "2011-01-01"))
-    dynamo.update("a", "2011-01-01", 121.22, 143.4444, 113.1, 133.333, 1234567890)
-    print(dynamo.get_size())
-    #dynamo.close()

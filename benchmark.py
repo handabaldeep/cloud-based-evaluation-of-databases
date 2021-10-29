@@ -174,6 +174,16 @@ elif args.database == "dynamo":
     db = Dynamo(
         region=config.conf[args.database]["region"]
     )
+elif args.database == "mongo":
+    from mongo import Mongo
+
+    db = Mongo(
+        host=config.conf[args.database]["host"],
+        port=config.conf[args.database]["post"],
+        user=config.conf[args.database]["user"],
+        password=config.conf[args.database]["password"],
+        database=config.conf[args.database]["database"]
+    )
 else:
     print("Database type not supported")
     exit()
@@ -185,9 +195,9 @@ if args.operation == "load":
     load_database(db_=db, data_dir_=data_dir)
     with open(f"results/{args.database}_{args.operation}_{nor}_{interval}.size", "w+") as f:
         if args.database == "dynamo" and db.get_size() == 111:
-            f.write(str(db.get_size()*nor))
+            f.write(str(db.get_size()*nor/(1024*1024))+"MB")
         else:
-            f.write(str(db.get_size()))
+            f.write(str(db.get_size())+"MB")
 elif args.operation == "run":
     db.create_table()
     load_database(db_=db, data_dir_=data_dir)

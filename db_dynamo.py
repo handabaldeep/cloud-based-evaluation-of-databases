@@ -3,7 +3,7 @@ from boto3.dynamodb.conditions import Key
 import time
 
 
-class Dynamo:
+class DynamoDB:
     def __init__(self, region):
         self.dynamodb = boto3.resource("dynamodb", region_name=region)
         self.table_name = "ohlc"

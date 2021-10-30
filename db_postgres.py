@@ -1,17 +1,19 @@
-import mysql.connector as mysql
+import psycopg2
+import warnings
+
+warnings.filterwarnings("ignore")
 
 
-class MySqlDB:
+class PostgresDB:
     def __init__(self, host, port, user, password, database):
-        self.conn = mysql.connect(
-                        host=host,
-                        port=port,
-                        user=user,
-                        password=password,
-                        database=database
-                    )
+        self.conn = psycopg2.connect(
+            host=host,
+            port=port,
+            user=user,
+            password=password,
+            dbname=database
+        )
         self.cur = self.conn.cursor()
-        self.db_name = database
         self.table_name = "ohlc"
 
     def _execute_query(self, query_):
@@ -58,12 +60,8 @@ class MySqlDB:
         self._execute_query(query)
 
     def get_size(self):
-        query = f"SELECT table_name as 'Table', " \
-                f"round(((data_length + index_length) / 1024 / 1024), 2) `Size in MB` " \
-                f"FROM information_schema.TABLES " \
-                f"WHERE table_schema = '{self.db_name}' " \
-                f"AND table_name = '{self.table_name}'"
-        return self._execute_query_with_results(query)[0][0]
+        query = f"SELECT pg_total_relation_size('{self.table_name}')"
+        return self._execute_query_with_results(query)[0][0]/(1024*1024)
 
     def close(self):
         self._cleanup()

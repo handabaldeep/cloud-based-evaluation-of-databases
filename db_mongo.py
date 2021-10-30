@@ -1,7 +1,7 @@
 import pymongo
 
 
-class Mongo:
+class MongoDB:
     def __init__(self, host, port, user, password, database):
         self.mongodb = pymongo.MongoClient(
             host=host,
@@ -21,6 +21,7 @@ class Mongo:
     def insert(self, symbol_, date_, open_, high_, low_, close_, volume_):
         self.table.insert_one(
             {
+                "_id": f"{symbol_}_{date_}",
                 "symbol": symbol_,
                 "trading_date": date_,
                 "open_price": str(open_),
@@ -34,8 +35,8 @@ class Mongo:
     def read(self, symbol_, date_):
         resp = self.table.find(
             {
-                "symbol": symbol_,
-                "trading_date": {"$gte": date_}
+                "_id": {"$gte": f"{symbol_}_{date_}"},
+                "symbol": symbol_
             }
         )
         res = [x for x in resp]
@@ -44,8 +45,7 @@ class Mongo:
     def update(self, symbol_, date_, open_, high_, low_, close_, volume_):
         self.table.update_one(
             {
-                "symbol": symbol_,
-                "trading_date": date_
+                "_id": f"{symbol_}_{date_}",
             },
             {
                 "$set": {

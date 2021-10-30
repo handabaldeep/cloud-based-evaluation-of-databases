@@ -21,6 +21,7 @@ parser.add_argument("-w", "--workload", default="a",
 parser.add_argument("-v", "--verbose", action="store_true",
                     help="To enable debug")
 args = parser.parse_args()
+print(args)
 
 nor = int(args.noperations)
 if nor < 1:
@@ -148,38 +149,38 @@ def process_operations(db_, data_dir_, ops):
         tnop += 1
 
 
-if args.database == "postgres":
-    from postgres import PostgresDB
+if args.database == "postgres" or args.database == "rds-postgres" or args.database == "aurora-postgres":
+    from db_postgres import PostgresDB
 
     db = PostgresDB(
         host=config.conf[args.database]["host"],
-        port=config.conf[args.database]["post"],
+        port=config.conf[args.database]["port"],
         user=config.conf[args.database]["user"],
         password=config.conf[args.database]["password"],
         database=config.conf[args.database]["database"]
     )
-elif args.database == "mysql":
-    from mysql import MySqlDB
+elif args.database == "mysql" or args.database == "rds-mysql" or args.database == "aurora-mysql":
+    from db_mysql import MySqlDB
 
     db = MySqlDB(
         host=config.conf[args.database]["host"],
-        port=config.conf[args.database]["post"],
+        port=config.conf[args.database]["port"],
         user=config.conf[args.database]["user"],
         password=config.conf[args.database]["password"],
         database=config.conf[args.database]["database"]
     )
-elif args.database == "dynamo":
-    from dynamo import Dynamo
+elif args.database == "dynamodb":
+    from db_dynamo import DynamoDB
 
-    db = Dynamo(
+    db = DynamoDB(
         region=config.conf[args.database]["region"]
     )
-elif args.database == "mongo":
-    from mongo import Mongo
+elif args.database == "mongodb" or args.database == "documentdb":
+    from db_mongo import MongoDB
 
-    db = Mongo(
+    db = MongoDB(
         host=config.conf[args.database]["host"],
-        port=config.conf[args.database]["post"],
+        port=config.conf[args.database]["port"],
         user=config.conf[args.database]["user"],
         password=config.conf[args.database]["password"],
         database=config.conf[args.database]["database"]
@@ -208,14 +209,17 @@ elif args.operation == "run":
     start_time = time.time()
     if args.workload == "a":
         process_operations(db_=db, data_dir_=data_dir,
-                           ops=create_random_operations(nor, inserts_=0.0, reads_=0.5, updates_=0.5))
+                           ops=create_random_operations(nor, inserts_=0.0, reads_=0.95, updates_=0.05))
     elif args.workload == "b":
         process_operations(db_=db, data_dir_=data_dir,
-                           ops=create_random_operations(nor, inserts_=0.5, reads_=0.5, updates_=0.0))
+                           ops=create_random_operations(nor, inserts_=0.0, reads_=0.5, updates_=0.5))
     elif args.workload == "c":
         process_operations(db_=db, data_dir_=data_dir,
-                           ops=create_random_operations(nor, inserts_=0.5, reads_=0.0, updates_=0.5))
+                           ops=create_random_operations(nor, inserts_=0.5, reads_=0.5, updates_=0.0))
     elif args.workload == "d":
+        process_operations(db_=db, data_dir_=data_dir,
+                           ops=create_random_operations(nor, inserts_=0.5, reads_=0.0, updates_=0.5))
+    elif args.workload == "e":
         process_operations(db_=db, data_dir_=data_dir,
                            ops=create_random_operations(nor, inserts_=0.33, reads_=0.33, updates_=0.33))
     else:

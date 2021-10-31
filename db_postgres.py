@@ -44,8 +44,10 @@ class PostgresDB:
         self._execute_query(query)
 
     def read(self, symbol_, date_):
-        query = f"SELECT * FROM {self.table_name} " \
-                f"WHERE symbol='{symbol_}' AND trading_date>='{date_}'"
+        query = f"SELECT volume FROM {self.table_name} " \
+                f"WHERE symbol='{symbol_}' AND trading_date<'{date_}' " \
+                f"ORDER BY trading_date DESC " \
+                f"limit 20"
         return len(self._execute_query_with_results(query))
 
     def update(self, symbol_, date_, open_, high_, low_, close_, volume_):

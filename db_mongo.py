@@ -1,4 +1,5 @@
 import pymongo
+import datetime
 
 
 class MongoDB:
@@ -23,22 +24,27 @@ class MongoDB:
             {
                 "_id": f"{symbol_}_{date_}",
                 "symbol": symbol_,
-                "trading_date": date_,
-                "open_price": str(open_),
-                "high_price": str(high_),
-                "low_price": str(low_),
-                "close_price": str(close_),
-                "volume": str(volume_)
+                "trading_date": datetime.datetime.strptime(date_, "%Y-%m-%d"),
+                "open_price": open_,
+                "high_price": high_,
+                "low_price": low_,
+                "close_price": close_,
+                "volume": volume_
             }
         )
 
     def read(self, symbol_, date_):
         resp = self.table.find(
             {
-                "_id": {"$gte": f"{symbol_}_{date_}"},
+                "_id": {"$lt": f"{symbol_}_{date_}"},
                 "symbol": symbol_
+            },
+            {
+                "volume"
             }
-        )
+        ).sort(
+            [("_id", -1)]
+        ).limit(20)
         res = [x for x in resp]
         return len(res)
 
@@ -49,11 +55,11 @@ class MongoDB:
             },
             {
                 "$set": {
-                    'open': str(open_),
-                    'high': str(high_),
-                    'low': str(low_),
-                    'close': str(close_),
-                    'volume': str(volume_)
+                    'open': open_,
+                    'high': high_,
+                    'low': low_,
+                    'close': close_,
+                    'volume': volume_
                 }
             }
         )

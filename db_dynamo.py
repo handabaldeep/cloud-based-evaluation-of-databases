@@ -39,7 +39,7 @@ class DynamoDB:
                 }
             )
             # to allow creation of table
-            time.sleep(10)
+            time.sleep(15)
 
     def insert(self, symbol_, date_, open_, high_, low_, close_, volume_):
         self.table.put_item(
@@ -56,7 +56,10 @@ class DynamoDB:
 
     def read(self, symbol_, date_):
         resp = self.table.query(
-            KeyConditionExpression=Key('symbol').eq(symbol_) & Key('trading_date').gte(date_)
+            ProjectionExpression="volume",
+            KeyConditionExpression=Key('symbol').eq(symbol_) & Key('trading_date').lt(date_),
+            ScanIndexForward=False,
+            Limit=20
         )
         return len(resp["Items"])
 

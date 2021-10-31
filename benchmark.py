@@ -194,7 +194,7 @@ if args.operation == "load":
     print_stats()
     start_time = time.time()
     load_database(db_=db, data_dir_=data_dir)
-    with open(f"results/{args.database}_{args.operation}_{nor}_{interval}.size", "w+") as f:
+    with open(f"results/{args.database}/{args.database}_{args.operation}_{nor}_{interval}.size", "w+") as f:
         if args.database == "dynamo" and db.get_size() == 111:
             f.write(str(db.get_size()*nor/(1024*1024))+"MB")
         else:
@@ -223,7 +223,7 @@ elif args.operation == "run":
         process_operations(db_=db, data_dir_=data_dir,
                            ops=create_random_operations(nor, inserts_=0.33, reads_=0.33, updates_=0.33))
     else:
-        print("Please choose a valid workload (a, b, c, d)")
+        print("Please choose a valid workload (a, b, c, d, e)")
 else:
     print("Please choose a valid operation (load, run)")
 
@@ -233,6 +233,6 @@ print("Total runtime:", end_time)
 print("Exiting...")
 print(stats)
 
-stats.to_csv(f"results/{args.database}_{args.operation}_{args.workload}_{nor}_{interval}.csv", index=False)
+stats.to_csv(f"results/{args.database}/{args.database}_{args.operation}_{args.workload}_{nor}_{interval}.csv", index=False)
 db.close()
 exit_thread = True

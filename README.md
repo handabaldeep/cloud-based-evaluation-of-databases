@@ -11,14 +11,15 @@ We have divided the data into two parts:
 - `load`: this is used to load the database before running any workloads
 - `insert`: the data inside this directory is used for insert operations (if any) inside the workloads
 
-We have got four different workloads with varying proportions of `insert`, `read` and `update` operations. these are:
+We have got five different workloads with varying proportions of `insert`, `read` and `update` operations. these are:
 
 | Workload | Insert(%) | Read(%) | Update(%) |
 | -------- | --------- | ------- | --------- |
-| a        | 0         | 50      | 50        |
-| b        | 50        | 50      | 0         |
-| c        | 50        | 0       | 50        |
-| d        | 34        | 33      | 33        |
+| a        | 0         | 95      | 5         |
+| b        | 0         | 50      | 50        |
+| c        | 50        | 50      | 0         |
+| d        | 50        | 0       | 50        |
+| e        | 34        | 33      | 33        |
 
 
 ## How to run?
@@ -47,7 +48,7 @@ positional arguments:
 optional arguments:
   -h, --help            show this help message and exit
   -d DATABASE, --database DATABASE
-                        Type of database (postgres, mysql, dynamodb)
+                        Type of database (postgres, mysql, dynamodb, documentdb, mongodb)
   -r ROOT, --root ROOT  Root data directory
   -n NOPERATIONS, --noperations NOPERATIONS
                         Number of operations to run

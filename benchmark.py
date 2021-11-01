@@ -9,7 +9,7 @@ import config
 parser = argparse.ArgumentParser()
 parser.add_argument("operation", help="either of load or run")
 parser.add_argument("-d", "--database", default="postgres",
-                    help="Type of database (postgres, mysql, dynamodb)")
+                    help="Type of database (postgres, mysql, dynamodb, documentdb, mongodb)")
 parser.add_argument("-r", "--root", default="date/Stocks",
                     help="Root data directory")
 parser.add_argument("-n", "--noperations", default="10000",

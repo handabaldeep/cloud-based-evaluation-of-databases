@@ -1,5 +1,5 @@
 # cloud-based-evaluation-of-databases
-This is database benchmark tool we have developed for our Journal - 
+This is a database benchmark tool we have developed for our Journal - 
 "**Cloud based evaluation of databases using the stock market data**".
 
 ## Workloads
